@@ -2,12 +2,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ── DESIGN TOKENS ── */
 :root {
   --gold: #ffcb05;
   --blue: #3d7dca;
   --dark: #0d0d1a;
 }
 
+/* ── BASE ── */
 body {
   background: radial-gradient(ellipse at 50% 0%, #1a2a4a 0%, #0d0d1a 60%);
   color: #eee;
@@ -27,16 +29,19 @@ h1 {
   font-size: 2.8rem;
   font-weight: 900;
   color: var(--gold);
+  /* Blauer Versatz-Schatten + weicher Goldschimmer */
   text-shadow: 3px 3px 0 var(--blue), 0 0 40px rgba(255,203,5,0.4);
   margin-bottom: 2.5rem;
   letter-spacing: 0.04em;
 }
 
-/* ── BOARD ── */
+/* ══════════════════════════════
+   BOARD – Spielfeld-Layout
+══════════════════════════════ */
 .board {
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  align-items: stretch; /* Karten gleicher Höhe */
   gap: 3.5rem;
   position: relative;
 }
@@ -45,7 +50,7 @@ h1 {
   font-family: 'Cinzel', serif;
   font-size: 1.4rem;
   font-weight: 900;
-  color: rgba(255,203,5,0.25);
+  color: rgba(255,203,5,0.25); /* bewusst blass – visuelles Trennelement */
   letter-spacing: 0.1em;
   align-self: center;
   flex-shrink: 0;
@@ -58,18 +63,9 @@ h1 {
   gap: 0.6rem;
 }
 
-.card-slot > .pcard {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.card-slot > .pcard > .pcard__border {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+/* Karte füllt verbleibende Slot-Höhe */
+.card-slot > .pcard { flex: 1; display: flex; flex-direction: column; width: 100%; }
+.card-slot > .pcard > .pcard__border { flex: 1; display: flex; flex-direction: column; }
 
 .card-label {
   font-size: 0.65rem;
@@ -79,13 +75,16 @@ h1 {
   font-weight: 700;
 }
 
-/* ── POKÉMON KARTE ── */
+/* ══════════════════════════════
+   POKÉMON KARTE – Äußere Hülle
+══════════════════════════════ */
 .pcard {
+  position: relative;
   transition: transform 0.25s ease;
 }
 .pcard:hover { transform: translateY(-4px); }
 
-/* Äußerer cremefarbener Rahmen */
+/* Cremefarbener Kartenrahmen mit Gold-Gradient – imitiert echte TCG-Karte */
 .pcard__border {
   width: 250px;
   height: 490px;
@@ -95,12 +94,12 @@ h1 {
   flex-direction: column;
   background: linear-gradient(145deg, #f5f0dc 0%, #e8d8a0 40%, #f0e8c8 60%, #d4b86a 100%);
   box-shadow:
-    0 0 0 2px #b89040,
+    0 0 0 2px #b89040,          /* dünner Gold-Outline */
     0 10px 40px rgba(0,0,0,0.7),
     inset 0 1px 0 rgba(255,255,220,0.8);
 }
 
-/* Holografischer Glanz */
+/* Holografischer Glanzstreifen als Pseudo-Element über der Karte */
 .pcard__border::after {
   content: '';
   position: absolute;
@@ -117,11 +116,7 @@ h1 {
   z-index: 20;
 }
 
-.pcard {
-  position: relative;
-}
-
-/* Innere Kartenoberfläche */
+/* Innere Kartenoberfläche – nimmt verfügbare Höhe ein */
 .pcard__face {
   border-radius: 10px;
   overflow: hidden;
@@ -130,7 +125,7 @@ h1 {
   flex: 1;
 }
 
-/* ── HEADER ── */
+/* ── KARTEN-HEADER ── */
 .pcard__header {
   display: flex;
   justify-content: space-between;
@@ -147,6 +142,7 @@ h1 {
   gap: 5px;
 }
 
+/* Kleines "BASIC"-Badge links vom Namen */
 .pcard__stage {
   font-size: 0.55rem;
   font-weight: 700;
@@ -169,7 +165,7 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 130px;
+  max-width: 130px; /* verhindert Überlauf bei langen Namen */
 }
 
 .pcard__hp-row {
@@ -194,7 +190,7 @@ h1 {
   margin-right: 4px;
 }
 
-/* Typ-Symbol kleines Kreis-Icon */
+/* Kleines Kreis-Icon für den Typ neben dem HP-Wert */
 .pcard__type-icon {
   width: 14px;
   height: 14px;
@@ -202,6 +198,8 @@ h1 {
   display: inline-block;
   border: 1px solid rgba(255,255,255,0.4);
 }
+
+/* Typ-Farben: Icon-Version (einfarbig) */
 .pcard__type-icon.type-fire     { background: #f08030; }
 .pcard__type-icon.type-water    { background: #6890f0; }
 .pcard__type-icon.type-grass    { background: #78c850; }
@@ -225,7 +223,7 @@ h1 {
 .pcard__art-frame {
   margin: 3px 6px;
   border-radius: 6px;
-  border: 3px solid;        /* Farbe per inline style */
+  border: 3px solid; /* Farbe kommt per inline style aus JS (Typ-Akzentfarbe) */
   padding: 4px;
   background: rgba(0,0,0,0.3);
 }
@@ -241,7 +239,7 @@ h1 {
   overflow: hidden;
 }
 
-/* Subtile Radialleuchte hinter Sprite */
+/* Subtiler Radial-Glow hinter dem Sprite */
 .pcard__art-inner::before {
   content: '';
   position: absolute;
@@ -254,13 +252,13 @@ h1 {
 .pcard__sprite {
   width: 105px;
   height: 105px;
-  image-rendering: pixelated;
+  image-rendering: pixelated; /* erhält den Pixel-Art-Look der Gen-1-Sprites */
   position: relative;
   z-index: 1;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
 }
 
-/* ── TYP-ZEILE ── */
+/* ── TYP-BADGES ── */
 .pcard__type-row {
   display: flex;
   justify-content: center;
@@ -280,10 +278,11 @@ h1 {
   text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
+/* Typ-Farben: Badge-Version (Gradient) – doppelt definiert mit .pcard__type-icon */
 .type-fire     { background: linear-gradient(135deg,#f08030,#e03020); }
 .type-water    { background: linear-gradient(135deg,#6890f0,#386090); }
 .type-grass    { background: linear-gradient(135deg,#78c850,#4e8234); }
-.type-electric { background: linear-gradient(135deg,#f8d030,#c8a800); color:#222; }
+.type-electric { background: linear-gradient(135deg,#f8d030,#c8a800); color:#222; } /* dunkler Text wegen hellem Gelb */
 .type-psychic  { background: linear-gradient(135deg,#f85888,#a01050); }
 .type-ice      { background: linear-gradient(135deg,#98d8d8,#5aafaf); }
 .type-dragon   { background: linear-gradient(135deg,#7038f8,#4824a0); }
@@ -299,7 +298,7 @@ h1 {
 .type-normal   { background: linear-gradient(135deg,#a8a878,#6d6d50); }
 .type-fairy    { background: linear-gradient(135deg,#ee99ac,#c44d6b); }
 
-/* ── STATS-PANEL (heller Bereich wie auf echten Karten) ── */
+/* ── STATS-PANEL (heller Bereich, wie echte TCG-Karte) ── */
 .pcard__stats-panel {
   background: rgba(255,255,255,0.92);
   border-top: 2px solid rgba(0,0,0,0.15);
@@ -308,13 +307,9 @@ h1 {
   flex: 1;
 }
 
-.pcard__stats {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
+.pcard__stats { list-style: none; display: flex; flex-direction: column; gap: 3px; }
 
+/* Stat-Zeile: Name | Balken | Zahl – klickbar für Auswahl */
 .pcard__stat {
   display: grid;
   grid-template-columns: 68px 1fr 28px;
@@ -325,10 +320,7 @@ h1 {
   cursor: pointer;
   transition: background 0.12s ease;
 }
-
-.pcard__stat:hover {
-  background: rgba(61,125,202,0.12);
-}
+.pcard__stat:hover { background: rgba(61,125,202,0.12); }
 
 .pcard__stat-name {
   font-size: 0.68rem;
@@ -338,6 +330,7 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+/* Grauer Track für den Stat-Balken */
 .pcard__stat-bar-wrap {
   height: 5px;
   background: rgba(0,0,0,0.1);
@@ -345,6 +338,7 @@ h1 {
   overflow: hidden;
 }
 
+/* Farbiger Füllbalken – Breite & Farbe kommen per inline style aus JS */
 .pcard__stat-bar {
   height: 100%;
   border-radius: 3px;
@@ -359,7 +353,9 @@ h1 {
   text-align: right;
 }
 
-/* ── RÜCKSEITE ── */
+/* ══════════════════════════════
+   KARTEN-RÜCKSEITE
+══════════════════════════════ */
 .pcard__back {
   position: absolute;
   inset: 0;
@@ -373,7 +369,7 @@ h1 {
   padding: 18px 0;
 }
 
-/* Spiralwirbel mit mehreren rotierenden Bögen */
+/* Strahlenkranz-Hintergrund per conic-gradient */
 .pcard__back-rays {
   position: absolute;
   inset: -50%;
@@ -424,6 +420,7 @@ h1 {
   );
 }
 
+/* Drei dekorative Ringe mit gedrehten, asymmetrischen Border-Farben */
 .pcard__back-ring {
   position: absolute;
   border-radius: 50%;
@@ -433,39 +430,14 @@ h1 {
   border-style: solid;
   border-color: transparent;
 }
-.pcard__back-ring--lg {
-  width: 210px; height: 210px;
-  border-width: 1.5px;
-  border-top-color: rgba(150,190,255,0.35);
-  border-right-color: rgba(150,190,255,0.15);
-  border-bottom-color: rgba(150,190,255,0.05);
-  border-left-color: rgba(150,190,255,0.2);
-  transform: translate(-50%, -50%) rotate(-20deg);
-}
-.pcard__back-ring--md {
-  width: 145px; height: 145px;
-  border-width: 1.5px;
-  border-top-color: rgba(150,190,255,0.1);
-  border-right-color: rgba(150,190,255,0.3);
-  border-bottom-color: rgba(150,190,255,0.2);
-  border-left-color: rgba(150,190,255,0.05);
-  transform: translate(-50%, -50%) rotate(40deg);
-}
-.pcard__back-ring--sm {
-  width: 80px; height: 80px;
-  border-width: 1.5px;
-  border-top-color: rgba(150,190,255,0.25);
-  border-right-color: rgba(150,190,255,0.05);
-  border-bottom-color: rgba(150,190,255,0.3);
-  border-left-color: rgba(150,190,255,0.15);
-  transform: translate(-50%, -50%) rotate(15deg);
-}
+.pcard__back-ring--lg { width:210px; height:210px; border-width:1.5px; border-top-color:rgba(150,190,255,0.35); border-right-color:rgba(150,190,255,0.15); border-bottom-color:rgba(150,190,255,0.05); border-left-color:rgba(150,190,255,0.2);  transform:translate(-50%,-50%) rotate(-20deg); }
+.pcard__back-ring--md { width:145px; height:145px; border-width:1.5px; border-top-color:rgba(150,190,255,0.1);  border-right-color:rgba(150,190,255,0.3);  border-bottom-color:rgba(150,190,255,0.2);  border-left-color:rgba(150,190,255,0.05); transform:translate(-50%,-50%) rotate(40deg);  }
+.pcard__back-ring--sm { width:80px;  height:80px;  border-width:1.5px; border-top-color:rgba(150,190,255,0.25); border-right-color:rgba(150,190,255,0.05); border-bottom-color:rgba(150,190,255,0.3);  border-left-color:rgba(150,190,255,0.15); transform:translate(-50%,-50%) rotate(15deg);  }
 
-/* Pokéball */
+/* ── POKÉBALL (reine CSS-Zeichnung) ── */
 .pcard__back-ball {
   position: absolute;
-  width: 115px;
-  height: 115px;
+  width: 115px; height: 115px;
   border-radius: 50%;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -473,98 +445,49 @@ h1 {
   border: 5px solid #0a0a0a;
   box-shadow: 0 8px 28px rgba(0,0,0,0.7), inset 0 -3px 8px rgba(0,0,0,0.4);
 }
+.pcard__ball-top  { position:absolute; top:0; left:0; right:0; height:50%; background:radial-gradient(ellipse at 35% 30%,#ff7070 0%,#dd0000 60%,#990000 100%); }
+.pcard__ball-bot  { position:absolute; bottom:0; left:0; right:0; height:50%; background:radial-gradient(ellipse at 65% 70%,#ffffff 0%,#cccccc 50%,#888888 100%); }
+.pcard__ball-band { position:absolute; top:calc(50% - 6px); left:0; right:0; height:12px; background:#0a0a0a; z-index:2; }
+.pcard__ball-center { position:absolute; width:26px; height:26px; border-radius:50%; background:#222; border:4px solid #0a0a0a; top:50%; left:50%; transform:translate(-50%,-50%); z-index:3; }
+/* Weißer Innenkreis des Pokéballs */
+.pcard__ball-center::after { content:''; position:absolute; width:12px; height:12px; border-radius:50%; background:white; top:50%; left:50%; transform:translate(-50%,-50%); }
+.pcard__ball-shine { position:absolute; width:24px; height:14px; border-radius:50%; background:rgba(255,255,255,0.45); top:11px; left:13px; transform:rotate(-35deg); z-index:4; }
 
-.pcard__ball-top {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 50%;
-  background: radial-gradient(ellipse at 35% 30%, #ff7070 0%, #dd0000 60%, #990000 100%);
-}
-
-.pcard__ball-bot {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 50%;
-  background: radial-gradient(ellipse at 65% 70%, #ffffff 0%, #cccccc 50%, #888888 100%);
-}
-
-.pcard__ball-band {
-  position: absolute;
-  top: calc(50% - 6px);
-  left: 0; right: 0;
-  height: 12px;
-  background: #0a0a0a;
-  z-index: 2;
-}
-
-.pcard__ball-center {
-  position: absolute;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: #222;
-  border: 4px solid #0a0a0a;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-}
-
-.pcard__ball-center::after {
-  content: '';
-  position: absolute;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: white;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.pcard__ball-shine {
-  position: absolute;
-  width: 24px; height: 14px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.45);
-  top: 11px; left: 13px;
-  transform: rotate(-35deg);
-  z-index: 4;
-}
-
-/* Pokémon Schriftzug */
+/* Schriftzug oben & unten (unterer ist um 180° gedreht) */
 .pcard__back-logo {
   font-family: 'Arial Black', 'Arial Bold', sans-serif;
   font-size: 1.9rem;
   font-weight: 900;
   font-style: italic;
   color: #ffcb05;
-  text-shadow:
-    -3px -3px 0 #1a40c0,
-     3px -3px 0 #1a40c0,
-    -3px  3px 0 #1a40c0,
-     3px  3px 0 #1a40c0,
-     0    4px 0 #0a2090;
+  text-shadow: -3px -3px 0 #1a40c0, 3px -3px 0 #1a40c0, -3px 3px 0 #1a40c0, 3px 3px 0 #1a40c0, 0 4px 0 #0a2090;
   letter-spacing: 0.01em;
   position: relative;
   z-index: 5;
 }
+.pcard__back-logo--bot { transform: rotate(180deg); }
 
-.pcard__back-logo--bot {
-  transform: rotate(180deg);
-}
+/* ══════════════════════════════
+   KARTEN-ZUSTÄNDE
+══════════════════════════════ */
 
-/* Gewinner/Verlierer-Effekt */
+/* Versteckte Karte – blauer Rahmen statt Gold */
 .pcard--hidden .pcard__border {
   background: linear-gradient(145deg, #2244aa 0%, #1a3490 40%, #2244cc 60%, #0e2070 100%);
   box-shadow: 0 0 0 2px #0a1860, 0 10px 40px rgba(0,0,0,0.7);
 }
 
+/* Gewinner-Karte – goldener Leuchtrahmen */
 .pcard--winner .pcard__border {
   box-shadow: 0 0 0 2px #b89040, 0 0 30px rgba(255,203,5,0.6), 0 10px 40px rgba(0,0,0,0.7);
 }
-.pcard--loser {
-  opacity: 0.6;
-  filter: grayscale(0.5);
-}
 
-/* ── ERGEBNIS PANEL ── */
+/* Verlierer-Karte – ausgegraut und transparent */
+.pcard--loser { opacity: 0.6; filter: grayscale(0.5); }
+
+/* ══════════════════════════════
+   ERGEBNIS-PANEL
+══════════════════════════════ */
 .result-panel {
   display: flex;
   flex-direction: column;
@@ -581,25 +504,17 @@ h1 {
   min-width: 120px;
 }
 
+/* Einblend-Animation: Scale + Blur-Fade */
 @keyframes panel-reveal {
-  from {
-    opacity: 0;
-    filter: blur(12px);
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: scale(1);
-  }
+  from { opacity: 0; filter: blur(12px); transform: scale(0.85); }
+  to   { opacity: 1; filter: blur(0);    transform: scale(1); }
 }
 
 .result-panel__sprite {
-  width: 80px;
-  height: 80px;
+  width: 80px; height: 80px;
   image-rendering: pixelated;
   filter: drop-shadow(0 0 10px rgba(255,203,5,0.5));
-  animation: sprite-bounce 0.5s ease 0.3s both;
+  animation: sprite-bounce 0.5s ease 0.3s both; /* 0.3s Verzögerung nach Panel-Reveal */
 }
 
 @keyframes sprite-bounce {
@@ -607,25 +522,14 @@ h1 {
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-.result-panel__text {
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--gold);
-  text-shadow: 0 0 12px rgba(255,203,5,0.5);
-  white-space: nowrap;
-}
+.result-panel__text { font-family:'Cinzel',serif; font-size:1rem; font-weight:700; color:var(--gold); text-shadow:0 0 12px rgba(255,203,5,0.5); white-space:nowrap; }
+.result-panel__stat { font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.7); white-space:nowrap; }
 
-.result-panel__stat {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.7);
-  white-space: nowrap;
-}
-
+/* Gewinner-/Verlierer-Färbung der Stat-Werte */
 .val--win  { color: #5ef07a; font-weight: 700; }
 .val--lose { color: #f05e5e; font-weight: 700; }
 
+/* ── BUTTON ── */
 button {
   margin-top: 0.3rem;
   padding: 0.6rem 1.4rem;
@@ -642,13 +546,11 @@ button {
   transition: transform 0.15s, box-shadow 0.15s;
   white-space: nowrap;
 }
+button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,203,5,0.5), inset 0 1px 0 rgba(255,255,255,0.4); }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255,203,5,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
-}
-
-/* ── KAMPF-SZENE (Overlay) ── */
+/* ══════════════════════════════
+   KAMPF-SZENE (Fullscreen-Overlay)
+══════════════════════════════ */
 .battle-scene {
   position: fixed;
   inset: 0;
@@ -661,9 +563,8 @@ button:hover {
   backdrop-filter: blur(6px);
 }
 
-.battle-scene--fade {
-  animation: battle-fade-out 0.5s ease 1.8s forwards;
-}
+/* Overlay blendet nach 1,8s aus – muss mit dem setTimeout in App.jsx (2200ms) harmonieren */
+.battle-scene--fade { animation: battle-fade-out 0.5s ease 1.8s forwards; }
 
 @keyframes battle-fade-out {
   from { opacity: 1; }
@@ -671,19 +572,22 @@ button:hover {
 }
 
 .battle-sprite {
-  width: 150px;
-  height: 150px;
+  width: 150px; height: 150px;
   image-rendering: pixelated;
   filter: drop-shadow(0 0 20px rgba(255,203,5,0.5));
 }
 
-/* ── ANIMATIONEN ── */
+/* ══════════════════════════════
+   KAMPF-ANIMATIONEN
+══════════════════════════════ */
+
+/* Nicht mehr in Verwendung (war früher für die Karten selbst) – Kandidat zum Aufräumen */
 .animate-win  { animation: sprite-win  0.6s ease; }
 .animate-lose { animation: sprite-lose 0.6s ease; }
-
 @keyframes sprite-win  { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
 @keyframes sprite-lose { 0%{transform:translateX(0);opacity:1} 100%{transform:translateX(-80px);opacity:0} }
 
+/* Einflug von links/rechts → Sieger bleibt stehen, Verlierer fliegt heraus */
 @keyframes battle-win-left  { 0%{transform:translateX(-200px);opacity:0} 40%{transform:translateX(20px);opacity:1} 60%{transform:translateX(20px) scale(1.2)} 100%{transform:translateX(20px) scale(1.1)} }
 @keyframes battle-lose-left { 0%{transform:translateX(-200px);opacity:0} 40%{transform:translateX(20px);opacity:1} 100%{transform:translateX(-300px);opacity:0} }
 @keyframes battle-win-right { 0%{transform:translateX(200px);opacity:0} 40%{transform:translateX(-20px);opacity:1} 60%{transform:translateX(-20px) scale(1.2)} 100%{transform:translateX(-20px) scale(1.1)} }
@@ -694,7 +598,7 @@ button:hover {
 .battle-win-right  { animation: battle-win-right  2s ease forwards; }
 .battle-lose-right { animation: battle-lose-right 2s ease forwards; }
 
-/* Loading */
+/* ── LOADING ── */
 @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
 .loading-text {
   font-family: 'Cinzel', serif;

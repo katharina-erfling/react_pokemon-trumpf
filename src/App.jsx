@@ -3,6 +3,7 @@ import { fetchPokemon } from './utils/api'
 import './App.css'
 import PokemonCard from './components/PokemonCard'
 
+// Übersetzt die englischen Stat-Keys der PokéAPI ins Deutsche
 const STAT_LABEL = {
   'hp': 'KP',
   'attack': 'Angriff',
@@ -16,11 +17,12 @@ function App() {
   const [playerCard, setPlayerCard] = useState(null)
   const [aiCard, setAiCard] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [result, setResult] = useState(null)
-  const [winner, setWinner] = useState(null)
+  const [result, setResult] = useState(null)       // 'win' | 'lose' | 'draw'
+  const [winner, setWinner] = useState(null)       // 'player' | 'ai' | null
   const [selectedStat, setSelectedStat] = useState(null)
   const [battlePhase, setBattlePhase] = useState(null) // 'fighting' | 'done'
 
+  // Lädt je ein zufälliges Pokémon (Gen 1) für Spieler und KI
   async function loadCards() {
     setLoading(true)
     setResult(null)
@@ -34,8 +36,10 @@ function App() {
     setLoading(false)
   }
 
+  // Initialer Ladevorgang beim Mount
   useEffect(() => { loadCards() }, [])
 
+  // Wird aufgerufen, wenn der Spieler einen Stat zum Vergleich auswählt
   function handleStatSelect(stat) {
     const playerVal = playerCard.stats.find(s => s.stat.name === stat).base_stat
     const aiVal     = aiCard.stats.find(s => s.stat.name === stat).base_stat
@@ -43,16 +47,18 @@ function App() {
     setSelectedStat(stat)
     setBattlePhase('fighting')
 
+    // Ergebnis sofort berechnen, Animationsphase startet parallel
     if (playerVal > aiVal)       { setResult('win');  setWinner('player') }
     else if (playerVal < aiVal)  { setResult('lose'); setWinner('ai') }
     else                         { setResult('draw'); setWinner(null) }
 
-    // Nach 2s Kampfanimation → Phase 'done'
+    // Nach der Kampfanimation (2,2s) in Phase 'done' wechseln → Result-Panel erscheint
     setTimeout(() => setBattlePhase('done'), 2200)
   }
 
-  const playerVal = selectedStat ? playerCard?.stats.find(s => s.stat.name === selectedStat)?.base_stat : null
-  const aiVal     = selectedStat ? aiCard?.stats.find(s => s.stat.name === selectedStat)?.base_stat : null
+  // Helfervariablen für das Result-Panel – nur relevant wenn ein Stat gewählt wurde
+  const playerVal  = selectedStat ? playerCard?.stats.find(s => s.stat.name === selectedStat)?.base_stat : null
+  const aiVal      = selectedStat ? aiCard?.stats.find(s => s.stat.name === selectedStat)?.base_stat : null
   const winnerCard = winner === 'player' ? playerCard : winner === 'ai' ? aiCard : null
 
   return (
@@ -65,6 +71,7 @@ function App() {
         <>
           <div className="board">
             <div className="card-slot">
+              {/* KI-Karte: Stats versteckt bis Kampf entschieden */}
               <PokemonCard
                 pokemon={aiCard}
                 hidden={!result}
@@ -75,6 +82,7 @@ function App() {
             </div>
             <div className="board-vs">VS</div>
             <div className="card-slot">
+              {/* Spielerkarte: onStatSelect nur aktiv, solange noch kein Ergebnis vorliegt */}
               <PokemonCard
                 pokemon={playerCard}
                 onStatSelect={!result ? handleStatSelect : undefined}
@@ -85,7 +93,7 @@ function App() {
             </div>
           </div>
 
-          {/* Mittel-Panel nach Kampf */}
+          {/* Result-Panel: erscheint erst nach Abschluss der Kampfanimation */}
           {battlePhase === 'done' && (
             <div className="result-panel">
               {winnerCard && (
@@ -107,7 +115,7 @@ function App() {
             </div>
           )}
 
-          {/* Kampfanimation Overlay — verschwindet nach 2s */}
+          {/* Kampfanimation-Overlay: läuft 2,2s, dann durch CSS-Klasse weggefadet */}
           {battlePhase === 'fighting' && (
             <div className="battle-scene battle-scene--fade">
               <img
